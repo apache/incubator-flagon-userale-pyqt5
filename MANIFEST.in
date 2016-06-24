@@ -1,5 +1,0 @@
-include MANIFEST.in
-include setup.py
-include README.txt 
-include CHANGELOG.txt 
-include LICENSE.txt
