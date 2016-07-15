@@ -1,7 +1,7 @@
 language: python
 python:
-  - "3.0"
+  - "3.5"
 install:
-  - "pip install -r requirements.txt"
+  - "pip3 install -r requirements.txt"
 script:
-  - python setup.py develop test
+  - python3 setup.py develop test

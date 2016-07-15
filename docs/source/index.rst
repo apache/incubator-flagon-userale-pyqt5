@@ -1,14 +1,5 @@
 :orphan:
 
-Apache UserAle's documentation!
-===============================
+.. include:: ../../README
 
 .. include:: contents.rst.inc
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
