@@ -14,5 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-requests>=2.0.0
-pyqt5==5.6
+"""Version information for UserAle.
+
+This file is imported by ``UserAle.__init__``,
+and parsed by ``setup.py``.
+"""
+
+__version__ = "1.0.0"
