@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quickstart Guide &mdash; Apache UserAle 1.0 documentation</title>
+  <title>Quickstart Guide &mdash; UserAle 1.0 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="Apache UserAle 1.0 documentation" href="index.html"/>
+    <link rel="top" title="UserAle 1.0 documentation" href="index.html"/>
         <link rel="next" title="API Documentation" href="userale.html"/>
         <link rel="prev" title="Installation Guide" href="installation.html"/> 
 
@@ -50,7 +50,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Apache UserAle
+            <a href="index.html" class="icon icon-home"> UserAle
           
 
           
@@ -83,7 +83,10 @@
             
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#instrumenting-your-application-with-userale">Instrumenting Your Application with UserAle</a></li>
+</ul>
+</li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="userale.html">API Documentation</a></li>
@@ -105,7 +108,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">Apache UserAle</a>
+        <a href="index.html">UserAle</a>
       </nav>
 
 
@@ -126,8 +129,6 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/quickstart.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
   </ul>
@@ -138,6 +139,53 @@
             
   <div class="section" id="quickstart-guide">
 <span id="quickstart"></span><h1>Quickstart Guide<a class="headerlink" href="#quickstart-guide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="instrumenting-your-application-with-userale">
+<h2>Instrumenting Your Application with UserAle<a class="headerlink" href="#instrumenting-your-application-with-userale" title="Permalink to this headline">¶</a></h2>
+<p>It&#8217;s very simple to instrument a PyQ5 application with UserAle. Simply import the UserAle library and register it with your application.</p>
+<p>Below is an example PyQt5 application taken from ZetCode PyQt5 tutorial instrumented with UserAle</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">QEvent</span>
+
+<span class="kn">from</span> <span class="nn">userale.ale</span> <span class="k">import</span> <span class="n">Ale</span>
+
+<span class="k">class</span> <span class="nc">TestApplication</span> <span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initUI</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">initUI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">qbtn</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;Quit&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">qbtn</span><span class="o">.</span><span class="n">setObjectName</span> <span class="p">(</span><span class="s2">&quot;testApplicationButton&quot;</span><span class="p">)</span>
+        <span class="n">qbtn</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">quit</span><span class="p">)</span>
+        <span class="n">qbtn</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">qbtn</span><span class="o">.</span><span class="n">sizeHint</span><span class="p">())</span>
+        <span class="n">qbtn</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Quit button&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">ex</span> <span class="o">=</span> <span class="n">TestApplication</span><span class="p">()</span>
+    <span class="c1"># Initiate UserAle</span>
+    <span class="n">ale</span> <span class="o">=</span> <span class="n">Ale</span> <span class="p">()</span>
+    <span class="c1"># install globally</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">installEventFilter</span> <span class="p">(</span><span class="n">ale</span><span class="p">)</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span> <span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Before we enter the mainloop of the application, UserAle needs to register the application to be instrumented.
+Simply instantiate UserAle and install it as an event filter in your application.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Initiate UserAle</span>
+<span class="n">ale</span> <span class="o">=</span> <span class="n">Ale</span> <span class="p">()</span>
+<span class="c1"># install globally</span>
+<span class="n">app</span><span class="o">.</span><span class="n">installEventFilter</span> <span class="p">(</span><span class="n">ale</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -159,7 +207,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, The Charles Stark Draper Laboratory Licensed under Apache Software License..
+        &copy; Copyright 2016, The Charles Stark Draper Laboratory..
 
     </p>
   </div>
