@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quickstart Guide &mdash; UserAle 1.0 documentation</title>
+  <title>Quickstart Guide &mdash; UserAle 1.0.0 documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   
 
   
-    <link rel="top" title="UserAle 1.0 documentation" href="index.html"/>
-        <link rel="next" title="API Documentation" href="userale.html"/>
+    <link rel="top" title="UserAle 1.0.0 documentation" href="index.html"/>
+        <link rel="next" title="API" href="userale.html"/>
         <link rel="prev" title="Installation Guide" href="installation.html"/> 
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                1.0
+                1.0.0
               </div>
             
           
@@ -84,12 +84,13 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#instrumenting-your-application-with-userale">Instrumenting Your Application with UserAle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#instrumenting-your-application-globally-with-userale">Instrumenting Your Application Globally with UserAle</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="userale.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userale.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userale.html#logger">Logger</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
@@ -139,10 +140,10 @@
             
   <div class="section" id="quickstart-guide">
 <span id="quickstart"></span><h1>Quickstart Guide<a class="headerlink" href="#quickstart-guide" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="instrumenting-your-application-with-userale">
-<h2>Instrumenting Your Application with UserAle<a class="headerlink" href="#instrumenting-your-application-with-userale" title="Permalink to this headline">¶</a></h2>
-<p>It&#8217;s very simple to instrument a PyQ5 application with UserAle. Simply import the UserAle library and register it with your application.</p>
-<p>Below is an example PyQt5 application taken from ZetCode PyQt5 tutorial instrumented with UserAle</p>
+<div class="section" id="instrumenting-your-application-globally-with-userale">
+<h2>Instrumenting Your Application Globally with UserAle<a class="headerlink" href="#instrumenting-your-application-globally-with-userale" title="Permalink to this headline">¶</a></h2>
+<p>It&#8217;s very simple to instrument a PyQt5 application with UserAle. Simply import the UserAle library and register it with your application.</p>
+<p>Below is an example PyQt5 application taken from ZetCode PyQt5 tutorial instrumented with UserAle.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMessageBox</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">QEvent</span>
@@ -195,7 +196,7 @@ Simply instantiate UserAle and install it as an event filter in your application
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="userale.html" class="btn btn-neutral float-right" title="API Documentation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="userale.html" class="btn btn-neutral float-right" title="API" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="installation.html" class="btn btn-neutral" title="Installation Guide" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -229,7 +230,7 @@ Simply instantiate UserAle and install it as an event filter in your application
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
