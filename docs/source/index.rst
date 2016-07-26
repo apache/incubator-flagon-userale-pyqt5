@@ -1,5 +1,3 @@
-:orphan:
-
-.. include:: ../../README
+.. include:: ../../README.rst
 
 .. include:: contents.rst.inc

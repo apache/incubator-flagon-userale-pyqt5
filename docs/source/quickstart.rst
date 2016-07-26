@@ -3,12 +3,12 @@
 Quickstart Guide
 ================
 
-Instrumenting Your Application with UserAle
--------------------------------------------
+Instrumenting Your Application Globally with UserAle
+----------------------------------------------------
 
-It's very simple to instrument a PyQ5 application with UserAle. Simply import the UserAle library and register it with your application. 
+It's very simple to instrument a PyQt5 application with UserAle. Simply import the UserAle library and register it with your application. 
 
-Below is an example PyQt5 application taken from ZetCode PyQt5 tutorial instrumented with UserAle
+Below is an example PyQt5 application taken from ZetCode PyQt5 tutorial instrumented with UserAle.
 
 ::
 
@@ -44,8 +44,6 @@ Below is an example PyQt5 application taken from ZetCode PyQt5 tutorial instrume
 	    app.installEventFilter (ale)
 
 	    sys.exit (app.exec_())
-
-
 
 Before we enter the mainloop of the application, UserAle needs to register the application to be instrumented. 
 Simply instantiate UserAle and install it as an event filter in your application. 
