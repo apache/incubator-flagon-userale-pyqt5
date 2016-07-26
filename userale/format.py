@@ -24,28 +24,11 @@ import json
 # Logger will need to optinally handle authorization 
 # through basic http auth, proxy, and SOCKS
 
-class Logger (object):
+class StructuredMessage (object):
 	"""
 	"""
+	def __init__(self, data):
+		self.data = data
 
-	# def __init__(self, url="", data={}):
-	# 	self.url = url
-	# 	self.data = data
-
-	# write to file
-
-	# send over url
-	# @staticmethod
-	# def emit (url, data):
-	# 	"""
-	# 	"""
-	# 	# url = self.url
-	# 	# payload = self.data
-	# 	r = requests.post (url, json=data)
-	# 	r.status_code
-
-	# print to stdout
-	@staticmethod
-	def stdout (data):
-		print (json.dumps (data, sort_keys=False, indent=4))
-		
+	def __str__(self):
+		return '%s' % (json.dumps (self.data, sort_keys=False, indent=4))

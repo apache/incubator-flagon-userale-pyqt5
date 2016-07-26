@@ -12,10 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from userale.logger import Logger
 from userale.version import __version__
 from PyQt5.QtCore import QObject, QEvent
 import datetime
+import time
+import logging
+from userale.format import StructuredMessage
+
+_ = StructuredMessage
 
 class Ale (QObject):
     """
@@ -24,7 +28,7 @@ class Ale (QObject):
     (a.k.a. system and signals sent between QObjects).
     """
     def __init__(self, 
-                 url="",
+                 output="userale.log",
                  autostart=True,
                  interval=5000,
                  user=None,
@@ -33,7 +37,7 @@ class Ale (QObject):
                  resolution=500,
                  shutoff=[]):
         """
-        :param url: [str] The URL to which logs will be sent (can either be file:// or http://)
+        :param output: [str] The file or url path to which logs will be sent
         :param autostart: [bool] Should UserAle start auotmatically on app rendering
         :param interval: [int] The minimum time interval in ms betweeen batch transmission of logs
         :param user: [str] Identifier for the user of the application
@@ -63,7 +67,7 @@ class Ale (QObject):
         QObject.__init__(self)
 
         # UserAle Configuration
-        self.url = url
+        self.output = output
         self.autostart = autostart
         self.interval = interval
         self.user = user
@@ -73,6 +77,12 @@ class Ale (QObject):
 
         # Store logs
         self.logs = []
+
+        # Configure logging
+        self.logger = logging
+        self.logger.basicConfig(level=logging.INFO,
+                                filename=self.output,
+                                format='%(message)s')
 
         # Drag/Drop - track duration
         self.dd = datetime.datetime.now ()
@@ -86,7 +96,7 @@ class Ale (QObject):
         Filters events for the watched object (in this case, QApplication)
         '''
 
-        data = {}
+        data = None
         
         if (event.type () == QEvent.MouseButtonPress):
             data = self.handleMouseEvents ("mousedown", event, object)
@@ -117,9 +127,9 @@ class Ale (QObject):
         else:
             pass    
 
-        if data:
-            Logger.stdout (data)
-        
+        # self.logs.append (data)
+        if data is not None:
+            self.logger.info (_(data))
         # return super(Ale, self).eventFilter(object, event)
         return False
 

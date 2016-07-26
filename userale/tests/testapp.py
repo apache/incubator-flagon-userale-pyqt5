@@ -44,7 +44,7 @@ def test_app ():
     app = QApplication(sys.argv)    
     app.setObjectName ("testApplication")
     ex = TestApplication()
-    ale = Ale ()
+    ale = Ale (output="mouse.log", user="testUser", version="0.0.1")
     # install globally
     app.installEventFilter (ale)
 
