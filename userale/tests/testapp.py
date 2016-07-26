@@ -42,6 +42,7 @@ class TestApplication (QWidget):
         
 def test_app ():
     app = QApplication(sys.argv)    
+    app.setObjectName ("testApplication")
     ex = TestApplication()
     ale = Ale ()
     # install globally
