@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright 2016 The Charles Stark Draper Laboratory, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#from __future__ import absolute_import
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 import io, os, sys
@@ -27,16 +24,6 @@ if sys.argv[-1] == 'setup.py':
     print ("To install, run 'python3 setup.py install'")
     print ()
     
-def read (*filenames, **kwargs):
-    encoding = kwargs.get ('encoding', 'utf-8')
-    sep = kwargs.get ('sep', '\n')
-    buf = []
-    for filename in filenames:
-        with io.open (filename, encoding=encoding) as f:
-            buf.append (f.read ())
-    return sep.join (buf)
-
-
 # This is a plug-in for setuptools that will invoke py.test
 # when you run python setup.py test
 class PyTest (TestCommand):
@@ -49,15 +36,18 @@ class PyTest (TestCommand):
         import pytest  # import here, because outside the required eggs aren't loaded yet
         sys.exit (pytest.main (self.test_args))
 
-# Get the version string 
-g = {}
-with open (os.path.join ('userale', 'version.py'), 'rt') as f:
-    exec (f.read (), g)
-    version = g['__version__']
+# Get the version string
+def get_version ():
+    basedir = os.path.dirname (__file__)
+    with open (os.path.join (basedir, 'userale/version.py')) as f:
+        version = {}
+        exec (f.read (), version)
+        return version['__version__']
+    raise RuntimeError ('No version info found.')
 
 setup (
     name = 'UserAle',
-    version = version,
+    version = get_version (),
     url = 'https://github.com/draperlaboratory/userale.pyqt5',
     license = 'Apache Software License',
     author = 'Michelle Beard',
@@ -88,7 +78,8 @@ setup (
         'console_scripts': [
             'mouse = userale.tests.testapp:test_app',
             'drag = userale.tests.testdragndrop:test_drag',
-            'drag2 = userale.tests.testdragndrop2:test_drag2'
+            'drag2 = userale.tests.testdragndrop2:test_drag2',
+            'window = userale.tests.testclose:test_close'
         ]
     }
 )

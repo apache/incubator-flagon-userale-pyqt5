@@ -1,6 +1,7 @@
 include MANIFEST.in
+include userale/version.py
 include setup.py
-include README
-include AUTHORS
-include CHANGELOG
+include README.rst
+include AUTHORS.rst
+include CHANGELOG.rst
 include LICENSE
