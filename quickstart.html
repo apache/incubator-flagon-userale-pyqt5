@@ -31,7 +31,7 @@
 
   
     <link rel="top" title="UserAle 1.0.0 documentation" href="index.html"/>
-        <link rel="next" title="API" href="userale.html"/>
+        <link rel="next" title="ALE Library" href="userale.html"/>
         <link rel="prev" title="Installation Guide" href="installation.html"/> 
 
   
@@ -89,8 +89,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="userale.html">API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="userale.html#logger">Logger</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userale.html">ALE Library</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
@@ -171,7 +170,7 @@
     <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
     <span class="n">ex</span> <span class="o">=</span> <span class="n">TestApplication</span><span class="p">()</span>
     <span class="c1"># Initiate UserAle</span>
-    <span class="n">ale</span> <span class="o">=</span> <span class="n">Ale</span> <span class="p">()</span>
+    <span class="n">ale</span> <span class="o">=</span> <span class="n">Ale</span> <span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="s2">&quot;mouse.log&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;testUser&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.0.1&quot;</span><span class="p">)</span>
     <span class="c1"># install globally</span>
     <span class="n">app</span><span class="o">.</span><span class="n">installEventFilter</span> <span class="p">(</span><span class="n">ale</span><span class="p">)</span>
 
@@ -181,7 +180,7 @@
 <p>Before we enter the mainloop of the application, UserAle needs to register the application to be instrumented.
 Simply instantiate UserAle and install it as an event filter in your application.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Initiate UserAle</span>
-<span class="n">ale</span> <span class="o">=</span> <span class="n">Ale</span> <span class="p">()</span>
+<span class="n">ale</span> <span class="o">=</span> <span class="n">Ale</span> <span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="s2">&quot;mouse.log&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;testUser&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.0.1&quot;</span><span class="p">)</span>
 <span class="c1"># install globally</span>
 <span class="n">app</span><span class="o">.</span><span class="n">installEventFilter</span> <span class="p">(</span><span class="n">ale</span><span class="p">)</span>
 </pre></div>
@@ -196,7 +195,7 @@ Simply instantiate UserAle and install it as an event filter in your application
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="userale.html" class="btn btn-neutral float-right" title="API" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="userale.html" class="btn btn-neutral float-right" title="ALE Library" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="installation.html" class="btn btn-neutral" title="Installation Guide" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
