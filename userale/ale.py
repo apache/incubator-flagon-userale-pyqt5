@@ -83,6 +83,19 @@ class Ale (QObject):
         # Drag/Drop - track duration
         self.dd = datetime.datetime.now ()
 
+        # Mapping of events to methods
+        self.map = {
+            QEvent.MouseButtonPress: {'mousedown': self.handleMouseEvents},
+            QEvent.MouseButtonRelease: {'mouseup': self.handleMouseEvents},
+            QEvent.MouseMove: {'mousemove': self.handleMouseEvents},
+            QEvent.KeyPress: {'keypress': self.handleKeyEvents},
+            QEvent.KeyRelease: {'keyrelease': self.handleKeyEvents},
+            QEvent.DragEnter: {'dragstart': self.handleDragEvents},
+            QEvent.DragLeave: {'dragleave': self.handleDragEvents},
+            QEvent.DragMove: {'dragmove': self.handleDragEvents},
+            QEvent.Drop: {'dragdrop': self.handleDragEvents}
+        }
+
     def eventFilter(self, object, event):
         '''
         :param object: [QObject] The object being watched.
@@ -93,41 +106,17 @@ class Ale (QObject):
         '''
 
         data = None
-        
-        if (event.type () == QEvent.MouseButtonPress):
-            data = self.handleMouseEvents ("mousedown", event, object)
-        elif (event.type () == QEvent.MouseButtonRelease):
-            data = self.handleMouseEvents ("mouseup", event, object)
-        elif (event.type () == QEvent.MouseMove):
-            data = self.handleMouseEvents ("mousemove", event, object)
-        elif (event.type () == QEvent.KeyPress):
-            data = self.handleKeyEvents ("keypress", event, object)
-        elif (event.type () == QEvent.KeyRelease):
-            data = self.handleKeyEvents ("keyrelease", event, object)
-        elif (event.type () == QEvent.Leave):
-            data = self.handleLeaveEvents ("keyrelease", event, object)         
-        elif (event.type () == QEvent.Move):
-            data = self.handleMoveEvents ("keyrelease", event, object)          
-        elif (event.type () == QEvent.Resize):
-            data = self.handleResizeEvents ("keyrelease", event, object)            
-        elif (event.type () == QEvent.Scroll):
-            data = self.handleScrollEvents ("keyrelease", event, object)            
-        elif (event.type () == QEvent.DragEnter):
-            data = self.handleDragEvents ("dragstart", event, object)   
-        elif (event.type () == QEvent.DragLeave):
-            data = self.handleDragEvents ("dragleave", event, object)   
-        elif (event.type () == QEvent.DragMove):
-            data = self.handleDragEvents ("dragmove", event, object)    
-        elif (event.type () == QEvent.Drop):
-            data = self.handleDragEvents ("dragdrop", event, object)    
-        else:
-            pass    
+        t = event.type ()
+
+        if len (object.children ()) > 0 and t in self.map:
+            name = list (self.map [t].keys())[0]
+            method = list (self.map [t].values())[0]
+            data = method (name, event, object)
 
         # self.logs.append (data)
         if data is not None:
             self.logger.info (_(data))
-        # return super(Ale, self).eventFilter(object, event)
-        return False
+        return super(Ale, self).eventFilter (object, event)
 
     def getSelector (self, object):
         """
@@ -137,7 +126,7 @@ class Ale (QObject):
         Get target object's name (object defined by user or object's meta class name)
         """
 
-        return object.objectName() if object.objectName() else object.staticMetaObject.className()
+        return object.objectName () if object.objectName () else object.staticMetaObject.className ()
 
     def getLocation (self, event):
         """
@@ -217,11 +206,13 @@ class Ale (QObject):
         if event_type == 'dragstart':
             # start timer
             self.dd = datetime.datetime.now ()
-        elif event_type == 'dragdrop' or event_type == 'dragleave':
-            details = {"elapsed" : str (datetime.datetime.now () - self.dd)}
+            details = {"source" : self.getSelector (event.source())}
+        elif event_type == 'dragdrop':
+            details = {"elapsed" : str (datetime.datetime.now () - self.dd),
+                       "source" : self.getSelector (event.source())}
             self.dd = datetime.datetime.now ()
         else:
-            # drag move event - ignore
+            # drag move/leave event - ignore
             pass
 
         return self.__create_msg (event_type, event, object, details=details)
@@ -283,7 +274,7 @@ class Ale (QObject):
             'target': self.getSelector (object) ,
             'path': self.getPath (object),
             'clientTime': self.getClientTime (),    
-            'location': self.getLocation(event),
+            'location': self.getLocation (event),
             'type': event_type ,
             'userAction': 'true',
             'details' : details,
