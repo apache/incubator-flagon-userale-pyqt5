@@ -26,5 +26,6 @@ Design notes, legal information and changelog are here.
    :maxdepth: 2
 
    authors
+   contributing
    changelog
    license
