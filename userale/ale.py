@@ -13,11 +13,11 @@
 # limitations under the License.
 
 from userale.version import __version__
+from userale.format import StructuredMessage
+
 from PyQt5.QtCore import QObject, QEvent
 import datetime
-import time
 import logging
-from userale.format import StructuredMessage
 
 _ = StructuredMessage
 
@@ -34,11 +34,11 @@ class Ale (QObject):
                  shutoff=[]):
         """
         :param output: [str] The file or url path to which logs will be sent
-        :param autostart: [bool] Should UserAle start auotmatically on app rendering
+        :param autostart: [bool] Should UserAle start automatically on app rendering
         :param interval: [int] The minimum time interval in ms betweeen batch transmission of logs
         :param user: [str] Identifier for the user of the application
         :param version: [str] The application version
-        :param details: [bool] Should detailed logs (key strokes, input/change values) be recorded
+        :param details: [bool] Should detailed logs (key strokes, input/change values) be recorded. Default is False
         :param resolution: [int] Delay in ms between instances of high frequency logs like mouseovers, scrolls, etc
         :param shutoff: [list] Turn off logging for specific events. For example, to ignore mousedown events, ['mousedown']
     
@@ -70,6 +70,7 @@ class Ale (QObject):
         self.version = version
         self.details = details
         self.resolution = resolution
+        self.shutoff = shutoff
 
         # Store logs
         self.logs = []
@@ -83,18 +84,28 @@ class Ale (QObject):
         # Drag/Drop - track duration
         self.dd = datetime.datetime.now ()
 
-        # Mapping of events to methods
+        # Mapping of all events to methods
         self.map = {
             QEvent.MouseButtonPress: {'mousedown': self.handleMouseEvents},
             QEvent.MouseButtonRelease: {'mouseup': self.handleMouseEvents},
             QEvent.MouseMove: {'mousemove': self.handleMouseEvents},
-            QEvent.KeyPress: {'keypress': self.handleKeyEvents},
-            QEvent.KeyRelease: {'keyrelease': self.handleKeyEvents},
             QEvent.DragEnter: {'dragstart': self.handleDragEvents},
             QEvent.DragLeave: {'dragleave': self.handleDragEvents},
             QEvent.DragMove: {'dragmove': self.handleDragEvents},
-            QEvent.Drop: {'dragdrop': self.handleDragEvents}
+            QEvent.Drop: {'dragdrop': self.handleDragEvents},
+            QEvent.KeyPress: {'keypress': self.handleKeyEvents},
+            QEvent.KeyRelease: {'keyrelease': self.handleKeyEvents}
         }
+
+        # Turn on/off keylogging & remove specific filters
+        for key in list(self.map):
+            val = self.map [key]
+            name = list (val) [0]
+            # Handle shutoff
+            if name in self.shutoff:
+                del self.map [key]
+            if self.details and (name == 'keypress' or name == 'keyrelease'):
+                del self.map [key]
 
     def eventFilter(self, object, event):
         '''

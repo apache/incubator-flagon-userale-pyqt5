@@ -62,7 +62,8 @@ class Example(QWidget):
 
 def test_drag ():
     app = QApplication(sys.argv)
-    ale = Ale ()
+    # Turn off mouse click's and keylogging
+    ale = Ale (shutoff=['mousedown', 'mouseup'], details=True)
     # install globally
     app.installEventFilter (ale)
     ex = Example()
