@@ -145,7 +145,7 @@
 <span id="userale"></span><h2>UserAle<a class="headerlink" href="#module-userale.ale" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="userale.ale.Ale">
-<em class="property">class </em><code class="descclassname">userale.ale.</code><code class="descname">Ale</code><span class="sig-paren">(</span><em>output='userale.log'</em>, <em>autostart=True</em>, <em>interval=5000</em>, <em>user=None</em>, <em>version=None</em>, <em>details=False</em>, <em>resolution=500</em>, <em>shutoff=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#userale.ale.Ale" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">userale.ale.</code><code class="descname">Ale</code><span class="sig-paren">(</span><em>output='userale.log'</em>, <em>interval=5000</em>, <em>user=None</em>, <em>version=None</em>, <em>keylog=False</em>, <em>resolution=500</em>, <em>shutoff=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#userale.ale.Ale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtCore.QObject</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -153,13 +153,12 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>output</strong> &#8211; [str] The file or url path to which logs will be sent</li>
-<li><strong>autostart</strong> &#8211; [bool] Should UserAle start auotmatically on app rendering</li>
 <li><strong>interval</strong> &#8211; [int] The minimum time interval in ms betweeen batch transmission of logs</li>
 <li><strong>user</strong> &#8211; [str] Identifier for the user of the application</li>
 <li><strong>version</strong> &#8211; [str] The application version</li>
-<li><strong>details</strong> &#8211; [bool] Should detailed logs (key strokes, input/change values) be recorded</li>
+<li><strong>keylog</strong> &#8211; [bool] Should detailed key logs be recorded. Default is False</li>
 <li><strong>resolution</strong> &#8211; [int] Delay in ms between instances of high frequency logs like mouseovers, scrolls, etc</li>
-<li><strong>shutoff</strong> &#8211; [list] Turn off logging for specific events. For example, to ignore mousedown events, [&#8216;mousedown&#8217;]</li>
+<li><strong>shutoff</strong> &#8211; [list] Turn off logging for specific events</li>
 </ul>
 </td>
 </tr>
@@ -171,7 +170,7 @@
     <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Example&#39;</span><span class="p">,</span> <span class="s1">&#39;testLineEdit&#39;</span><span class="p">],</span>
     <span class="s1">&#39;clientTime&#39;</span><span class="p">:</span> <span class="p">,</span>
     <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">82</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;mouseHover&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;mousemove&#39;</span><span class="p">,</span>
     <span class="s1">&#39;userAction&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span>
     <span class="s1">&#39;details&#39;</span> <span class="p">:</span> <span class="p">[],</span>
     <span class="s1">&#39;userId&#39;</span><span class="p">:</span> <span class="s1">&#39;userABC1234&#39;</span><span class="p">,</span>
