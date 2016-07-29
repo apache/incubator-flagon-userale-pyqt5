@@ -1,3 +1,5 @@
+.. _contributing:
+
 Contributing to UserAle.pyqt5
 -----------------------------
 
@@ -8,9 +10,9 @@ procedures are necessary to allow us to allocate resources for reviewing and
 testing your contribution, as well as communicate effectively with you during
 the review process.
 
-1) Create an issue in our JIRA
+1) Create an issue in GitHub
 
-    All changes to UserAle must have corresponding issues in JIRA so the
+    All changes to UserAle must have corresponding issues in GitHub so the
     change can be properly tracked:
 
         https://github.com/draperlaboratory/userale.pyqt5/issues

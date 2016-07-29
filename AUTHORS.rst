@@ -1,5 +1,6 @@
-UserAle.pyqt5 is written and maintained by Michelle Beard and 
-various contributors:
+.. _authors:
+
+UserAle.pyqt5 is written and maintained by Draper and various contributors:
 
 Development Lead
 ````````````````
@@ -12,5 +13,4 @@ Additional Staff
 - Laura Mariano <lmariano@draper.com>
 - Dr. Joshua Poore <jpoore@draper.com>
 - Clay Gimenez <cgimenez@draper.com>
-- Steven York <syork@draper.com>
 - Hugh Enxing <henxing@draper.com>

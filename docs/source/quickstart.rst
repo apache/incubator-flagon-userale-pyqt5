@@ -54,3 +54,11 @@ Simply instantiate UserAle and install it as an event filter in your application
 	ale = Ale (output="mouse.log", user="testUser", version="0.0.1")
 	# install globally
 	app.installEventFilter (ale)
+
+
+Instrumenting Your Application Manually with UserAle
+----------------------------------------------------
+
+.. todo::
+	
+	Write guidelines for instrumenting specific PyQt5 Widgets with UserAle.

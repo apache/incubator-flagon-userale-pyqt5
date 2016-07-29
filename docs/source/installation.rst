@@ -96,7 +96,7 @@ To build UserAle's documentation, create a directory at the root level of ``/use
 
 ::
 
-	$ mkdir userale.pyqt5-docs & cd userale.pyqt5/docs
+	$ mkdir userale.pyqt5-docs & cd userale.pyqt5-docs
 
 Execute build command:
 
