@@ -25,22 +25,20 @@ class Ale (QObject):
 
     def __init__(self, 
                  output="userale.log",
-                 autostart=True,
                  interval=5000,
                  user=None,
                  version=None,
-                 details=False,
+                 keylog=False,
                  resolution=500,
                  shutoff=[]):
         """
         :param output: [str] The file or url path to which logs will be sent
-        :param autostart: [bool] Should UserAle start automatically on app rendering
         :param interval: [int] The minimum time interval in ms betweeen batch transmission of logs
         :param user: [str] Identifier for the user of the application
         :param version: [str] The application version
-        :param details: [bool] Should detailed logs (key strokes, input/change values) be recorded. Default is False
+        :param keylog: [bool] Should detailed key logs be recorded. Default is False
         :param resolution: [int] Delay in ms between instances of high frequency logs like mouseovers, scrolls, etc
-        :param shutoff: [list] Turn off logging for specific events. For example, to ignore mousedown events, ['mousedown']
+        :param shutoff: [list] Turn off logging for specific events
     
         An example log will appear like this:
 
@@ -51,7 +49,7 @@ class Ale (QObject):
                 'path': ['Example', 'testLineEdit'],
                 'clientTime': ,
                 'location': {'x': 82, 'y': 0},
-                'type': 'mouseHover',
+                'type': 'mousemove',
                 'userAction': 'true',
                 'details' : [],
                 'userId': 'userABC1234',
@@ -64,11 +62,10 @@ class Ale (QObject):
 
         # UserAle Configuration
         self.output = output
-        self.autostart = autostart
         self.interval = interval
         self.user = user
         self.version = version
-        self.details = details
+        self.keylog = keylog
         self.resolution = resolution
         self.shutoff = shutoff
 
@@ -98,13 +95,9 @@ class Ale (QObject):
         }
 
         # Turn on/off keylogging & remove specific filters
-        for key in list(self.map):
-            val = self.map [key]
-            name = list (val) [0]
-            # Handle shutoff
-            if name in self.shutoff:
-                del self.map [key]
-            if self.details and (name == 'keypress' or name == 'keyrelease'):
+        for key in list (self.map):
+            name = list (self.map[key]) [0]
+            if name in self.shutoff or (not self.keylog and (name == 'keypress' or name == 'keyrelease')):
                 del self.map [key]
 
     def eventFilter(self, object, event):
