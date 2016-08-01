@@ -3,6 +3,10 @@
 Changelog
 =========
 
+1.0.2 (2016-08-01)
+------------------
+* The elapsed time for a drag event is being recorded in the ``dragdrop`` log.
+
 1.0.1 (2016-07-29)
 ------------------
 

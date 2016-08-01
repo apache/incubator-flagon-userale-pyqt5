@@ -79,7 +79,8 @@ class Ale (QObject):
                                 format='%(message)s')
 
         # Drag/Drop - track duration
-        self.dd = datetime.datetime.now ()
+        self.dd = 0
+        self.timer = False
 
         # Mapping of all events to methods
         self.map = {
@@ -208,13 +209,16 @@ class Ale (QObject):
 
         details = {}
         if event_type == 'dragstart':
-            # start timer
-            self.dd = datetime.datetime.now ()
+            if self.timer == False:
+                # Only start the timer on the first dragstart encountered
+                self.dd = datetime.datetime.now ()
+                self.timer = True
             details = {"source" : self.getSelector (event.source())}
         elif event_type == 'dragdrop':
             details = {"elapsed" : str (datetime.datetime.now () - self.dd),
                        "source" : self.getSelector (event.source())}
-            self.dd = datetime.datetime.now ()
+            self.dd = 0
+            self.timer = False
         else:
             # drag move/leave event - ignore
             pass
