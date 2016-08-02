@@ -27,6 +27,7 @@ class Ale (QObject):
                  output="userale.log",
                  interval=5000,
                  user=None,
+                 session=None,
                  version=None,
                  keylog=False,
                  resolution=500,
@@ -35,6 +36,7 @@ class Ale (QObject):
         :param output: [str] The file or url path to which logs will be sent
         :param interval: [int] The minimum time interval in ms betweeen batch transmission of logs
         :param user: [str] Identifier for the user of the application
+        :param session: [str] Optional session tag to track same user with multiple sessions
         :param version: [str] The application version
         :param keylog: [bool] Should detailed key logs be recorded. Default is False
         :param resolution: [int] Delay in ms between instances of high frequency logs like mouseovers, scrolls, etc
