@@ -55,6 +55,7 @@ class Ale (QObject):
                 'userAction': 'true',
                 'details' : [],
                 'userId': 'userABC1234',
+                'session': '765487cf34ert8dede5a562e4f3a7e12',
                 'toolVersion': 'myApplication',
                 'useraleVersion': '1.0.0 alpha'
             }
@@ -279,6 +280,7 @@ class Ale (QObject):
             'userAction': 'true',
             'details' : details,
             'userId': self.user,
+            'session': self.session,
             'toolVersion': self.version,
             'useraleVersion': __version__
         }
