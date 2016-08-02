@@ -87,7 +87,7 @@ class Ale (QObject):
             QEvent.MouseButtonPress: {'mousedown': self.handleMouseEvents},
             QEvent.MouseButtonRelease: {'mouseup': self.handleMouseEvents},
             QEvent.MouseMove: {'mousemove': self.handleMouseEvents},
-            QEvent.DragEnter: {'dragstart': self.handleDragEvents},
+            QEvent.DragEnter: {'dragenter': self.handleDragEvents},
             QEvent.DragLeave: {'dragleave': self.handleDragEvents},
             QEvent.DragMove: {'dragmove': self.handleDragEvents},
             QEvent.Drop: {'dragdrop': self.handleDragEvents},
@@ -208,9 +208,9 @@ class Ale (QObject):
         """
 
         details = {}
-        if event_type == 'dragstart':
+        if event_type == 'dragenter':
             if self.timer == False:
-                # Only start the timer on the first dragstart encountered
+                # Only start the timer on the first dragenter encountered
                 self.dd = datetime.datetime.now ()
                 self.timer = True
             details = {"source" : self.getSelector (event.source())}

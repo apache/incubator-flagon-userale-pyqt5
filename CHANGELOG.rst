@@ -19,7 +19,7 @@ Changelog
 	* ``mouseover``
 	* ``keypress`` (optional)
 	* ``keydown`` (optional)
-	* ``dragstart``
+	* ``dragenter``
 	* ``dragleave``
 	* ``dragmove``
 	* ``dragdrop``
