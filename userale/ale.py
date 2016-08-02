@@ -87,6 +87,8 @@ class Ale (QObject):
             QEvent.MouseButtonPress: {'mousedown': self.handleMouseEvents},
             QEvent.MouseButtonRelease: {'mouseup': self.handleMouseEvents},
             QEvent.MouseMove: {'mousemove': self.handleMouseEvents},
+            QEvent.Enter: {'mouseenter': self.handleMouseEvents},
+            QEvent.Leave: {'mouseleave': self.handleMouseEvents},
             QEvent.DragEnter: {'dragenter': self.handleDragEvents},
             QEvent.DragLeave: {'dragleave': self.handleDragEvents},
             QEvent.DragMove: {'dragmove': self.handleDragEvents},
@@ -233,18 +235,6 @@ class Ale (QObject):
         :return: [dict] A userale log describing a drag event.
 
         Returns the userale log representing all move events. 
-        """
-
-        pass
-
-    def handleLeaveEvents (self, event_type, event, object):
-        """
-        :param event_type: [str] The string representation of the type of event being triggered by the user.
-        :param event: [QEvent] The base class for all event classes.
-        :param object: [QObject] The base class for all Qt objects.
-        :return: [dict] A userale log describing a leave event.
-
-        Returns the userale log representing all leave events. 
         """
 
         pass

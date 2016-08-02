@@ -3,6 +3,13 @@
 Changelog
 =========
 
+1.0.3 (2016-08-02)
+------------------
+* New events UserAle is tracking:
+
+	* ``mouseenter``
+	* ``mouseleave``
+
 1.0.2 (2016-08-01)
 ------------------
 * The elapsed time for a drag event is being recorded in the ``dragdrop`` log.
