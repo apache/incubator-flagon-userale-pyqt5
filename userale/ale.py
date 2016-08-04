@@ -18,6 +18,7 @@ from userale.format import StructuredMessage
 from PyQt5.QtCore import QObject, QEvent
 import datetime
 import logging
+import uuid
 
 _ = StructuredMessage
 
@@ -28,7 +29,8 @@ class Ale (QObject):
                  interval=5000,
                  user=None,
                  session=None,
-                 version=None,
+                 toolname=None,
+                 toolversion=None,
                  keylog=False,
                  resolution=500,
                  shutoff=[]):
@@ -36,10 +38,11 @@ class Ale (QObject):
         :param output: [str] The file or url path to which logs will be sent
         :param interval: [int] The minimum time interval in ms betweeen batch transmission of logs
         :param user: [str] Identifier for the user of the application
-        :param session: [str] Optional session tag to track same user with multiple sessions
-        :param version: [str] The application version
+        :param session: [str] Session tag to track same user with multiple sessions. If a session is not provided, one will be created
+        :param toolname: [str] The application name
+        :param toolversion: [str] The application version
         :param keylog: [bool] Should detailed key logs be recorded. Default is False
-        :param resolution: [int] Delay in ms between instances of high frequency logs like mouseovers, scrolls, etc
+        :param resolution: [int] Delay in ms between instances of high frequency logs like movemoves, scrolls, etc
         :param shutoff: [list] Turn off logging for specific events
     
         An example log will appear like this:
@@ -49,15 +52,16 @@ class Ale (QObject):
             {
                 'target': 'testLineEdit',
                 'path': ['Example', 'testLineEdit'],
-                'clientTime': ,
+                'clientTime': '2016-08-03 16:12:03.460573',
                 'location': {'x': 82, 'y': 0},
                 'type': 'mousemove',
                 'userAction': 'true',
-                'details' : [],
+                'details' : {},
                 'userId': 'userABC1234',
-                'session': '765487cf34ert8dede5a562e4f3a7e12',
-                'toolVersion': 'myApplication',
-                'useraleVersion': '1.0.0 alpha'
+                'session': '5ee42ccc-852c-44d9-a937-28d7901e4ead',
+                'toolName': 'myApplication',
+                'toolVersion': '3.5.0',
+                'useraleVersion': '1.0.0'
             }
         """
 
@@ -67,7 +71,10 @@ class Ale (QObject):
         self.output = output
         self.interval = interval
         self.user = user
-        self.version = version
+        # Autogenerate session id if session is not configured
+        self.session = session if session is not None else str (uuid.uuid4 ())
+        self.toolname = toolname
+        self.toolversion = toolversion
         self.keylog = keylog
         self.resolution = resolution
         self.shutoff = shutoff
@@ -81,10 +88,6 @@ class Ale (QObject):
                                 filename=self.output,
                                 format='%(message)s')
 
-        # Drag/Drop - track duration
-        self.dd = 0
-        self.timer = False
-
         # Mapping of all events to methods
         self.map = {
             QEvent.MouseButtonPress: {'mousedown': self.handleMouseEvents},
@@ -97,7 +100,10 @@ class Ale (QObject):
             QEvent.DragMove: {'dragmove': self.handleDragEvents},
             QEvent.Drop: {'dragdrop': self.handleDragEvents},
             QEvent.KeyPress: {'keypress': self.handleKeyEvents},
-            QEvent.KeyRelease: {'keyrelease': self.handleKeyEvents}
+            QEvent.KeyRelease: {'keyrelease': self.handleKeyEvents},
+            QEvent.Move: {'move': self.handleMoveEvents},
+            QEvent.Resize: {'resize': self.handleResizeEvents},
+            QEvent.Scroll: {'scroll': self.handleScrollEvents}
         }
 
         # Turn on/off keylogging & remove specific filters
@@ -106,10 +112,10 @@ class Ale (QObject):
             if name in self.shutoff or (not self.keylog and (name == 'keypress' or name == 'keyrelease')):
                 del self.map [key]
 
-    def eventFilter(self, object, event):
+    def eventFilter (self, object, event):
         '''
         :param object: [QObject] The object being watched.
-        :param event: [QEvent] 
+        :param event: [QEvent] The event triggered by a user action.
         :return: [bool] Return true in order to filter the event out (stop it from being handled further). Otherwise return false.
         
         Filters events for the watched object (in this case, QApplication)
@@ -118,15 +124,30 @@ class Ale (QObject):
         data = None
         t = event.type ()
 
-        if len (object.children ()) > 0 and t in self.map:
+        # if self.__valid (object) and t in self.map:
+        # if len (object.children ()) > 0 and t in self.map:
+        if t in self.map:
             name = list (self.map [t].keys())[0]
             method = list (self.map [t].values())[0]
             data = method (name, event, object)
 
-        # self.logs.append (data)
         if data is not None:
             self.logger.info (_(data))
         return super(Ale, self).eventFilter (object, event)
+
+    def __valid (self, object):
+        # Parent is none?
+        #   capture it
+        # Parent exists - don't capture/capture Child/current object
+        
+        # Solo node
+        if object.parent () is None and len (object.children ()) == 0:
+            return True
+
+        # Leaf node
+        if object.parent () is not None and len (object.children ()) == 0:
+            return True
+        return False
 
     def getSelector (self, object):
         """
@@ -135,7 +156,7 @@ class Ale (QObject):
 
         Get target object's name (object defined by user or object's meta class name)
         """
-
+        
         return object.objectName () if object.objectName () else object.staticMetaObject.className ()
 
     def getLocation (self, event):
@@ -182,9 +203,6 @@ class Ale (QObject):
         :return: [dict] A userale log describing a mouse event.
 
         Returns the userale log representing all mouse event data. 
-
-        .. code-block:: python
-
         """
         
         return self.__create_msg (event_type, event, object)
@@ -213,20 +231,11 @@ class Ale (QObject):
         """
 
         details = {}
-        if event_type == 'dragenter':
-            if self.timer == False:
-                # Only start the timer on the first dragenter encountered
-                self.dd = datetime.datetime.now ()
-                self.timer = True
-            details = {"source" : self.getSelector (event.source())}
-        elif event_type == 'dragdrop':
-            details = {"elapsed" : str (datetime.datetime.now () - self.dd),
-                       "source" : self.getSelector (event.source())}
-            self.dd = 0
-            self.timer = False
-        else:
-            # drag move/leave event - ignore
-            pass
+
+        try:
+            details ["source"] = self.getSelector (event.source())      
+        except:
+            details ["source"] = None
 
         return self.__create_msg (event_type, event, object, details=details)
 
@@ -239,9 +248,9 @@ class Ale (QObject):
 
         Returns the userale log representing all move events. 
         """
-
-        pass
-
+        details = {"oldPos" : {"x" : event.oldPos ().x (), "y" : event.oldPos ().y ()}}
+        return self.__create_msg (event_type, event, object, details=details)
+        
     def handleResizeEvents (self, event_type, event, object):
         """
         :param event_type: [str] The string representation of the type of event being triggered by the user.
@@ -251,8 +260,9 @@ class Ale (QObject):
 
         Returns the userale log representing all resize events. 
         """
-
-        pass
+        details = {"size" : {"height" : event.size ().height (), "width" : event.size ().width ()},
+                   "oldSize":  {"height" : event.oldSize ().height (), "width" : event.oldSize ().width ()}}
+        return self.__create_msg (event_type, event, object, details=details)
 
     def handleScrollEvents (self, event_type, event, object):
         """
@@ -263,8 +273,7 @@ class Ale (QObject):
 
         Returns the userale log representing all scroll events. 
         """
-
-        pass
+        return self.__create_msg (event_type, event, object)
 
     def __create_msg (self, event_type, event, object, details={}):
         """
@@ -281,7 +290,8 @@ class Ale (QObject):
             'details' : details,
             'userId': self.user,
             'session': self.session,
-            'toolVersion': self.version,
+            'toolName': self.toolname,
+            'toolVersion': self.toolversion,
             'useraleVersion': __version__
         }
 
