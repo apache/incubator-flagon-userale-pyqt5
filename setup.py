@@ -76,10 +76,10 @@ setup (
                         ],
     entry_points = {
         'console_scripts': [
-            'mouse = userale.tests.testapp:test_app',
-            'drag = userale.tests.testdragndrop:test_drag',
-            'drag2 = userale.tests.testdragndrop2:test_drag2',
-            'window = userale.tests.testclose:test_close'
+            'mouse = userale.examples.testapp:test_app',
+            'drag = userale.examples.testdragndrop:test_drag',
+            'drag2 = userale.examples.testdragndrop2:test_drag2',
+            'window = userale.examples.testclose:test_close'
         ]
     }
 )

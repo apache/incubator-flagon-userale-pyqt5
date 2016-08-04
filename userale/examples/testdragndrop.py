@@ -37,7 +37,7 @@ class Button(QPushButton):
         self.setText(e.mimeData().text()) 
 
 
-class Example(QWidget):
+class ExampleWidget(QWidget):
   
     def __init__(self):
         super().__init__()
@@ -63,9 +63,9 @@ class Example(QWidget):
 def test_drag ():
     app = QApplication(sys.argv)
     # Turn off mouse click's and keylogging
-    ale = Ale (shutoff=['mousedown', 'mouseup'], keylog=True)
+    ale = Ale (shutoff=['mousemove', 'dragmove'], keylog=True)
     # install globally
     app.installEventFilter (ale)
-    ex = Example()
+    ex = ExampleWidget()
     ex.show()
     app.exec_()  
