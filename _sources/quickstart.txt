@@ -39,7 +39,7 @@ Below is an example PyQt5 application taken from ZetCode PyQt5 tutorial instrume
 	    app = QApplication(sys.argv)    
 	    ex = TestApplication()
 	    # Initiate UserAle
-	    ale = Ale (output="mouse.log", user="testUser", version="0.0.1")
+	    ale = Ale (output="mouse.log", user="testUser", toolversion="0.0.1")
 	    # install globally
 	    app.installEventFilter (ale)
 
@@ -51,7 +51,7 @@ Simply instantiate UserAle and install it as an event filter in your application
 ::
 
 	# Initiate UserAle
-	ale = Ale (output="mouse.log", user="testUser", version="0.0.1")
+	ale = Ale (output="mouse.log", user="testUser", toolversion="0.0.1")
 	# install globally
 	app.installEventFilter (ale)
 
