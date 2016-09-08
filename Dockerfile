@@ -13,14 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[egg_info]
-tag_svn_revision = false
+# Ubuntu Xenial 16.04 [LTS]
+FROM ubuntu:16.04
 
-[pytest]
-addopts = --ignore=setup.py --ignore=build --ignore=dist --doctest-modules
-norecursedirs=*.egg
+# Install Deps
+RUN apt-get update -yqq && \
+    apt-get install -yqq python3-dev python3-pip qt5-default && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+    
+COPY requirements.txt /opt/userale
 
-[build_sphinx]
-source-dir = docs
-build-dir = docs/_build
-all_files = 1
+WORKDIR /opt
+
+# Install requirements
+RUN pip3 install -r requirements.txt
+
+#CMD ["python", "./setup.py", "develop"]
+
