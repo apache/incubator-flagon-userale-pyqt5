@@ -16,7 +16,7 @@
 from userale.version import __version__
 from userale.format import JsonFormatter
 from PyQt5.QtCore import QObject, QEvent
-import datetime
+import datetime, time
 import logging
 import uuid
 
