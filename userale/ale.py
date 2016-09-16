@@ -15,10 +15,11 @@
 
 from userale.version import __version__
 from userale.format import JsonFormatter
-from PyQt5.QtCore import QObject, QEvent
+from PyQt5.QtCore import QObject, QEvent, QTimer
 import datetime, time
 import logging
 import uuid
+import json
 
 _ = JsonFormatter
 
@@ -31,7 +32,8 @@ class Ale (QObject):
                  toolname=None,
                  toolversion=None,
                  keylog=False,
-                 resolution=100,   
+                 interval=5000,
+                 resolution=1000,   
                  shutoff=[]):
         """
         :param output: [str] The file or url path to which logs will be sent
@@ -40,6 +42,7 @@ class Ale (QObject):
         :param toolname: [str] The application name
         :param toolversion: [str] The application version
         :param keylog: [bool] Should detailed key logs be recorded. Default is False
+        :param interval: [int] The minimum time interval in ms between batch transmission of logs. Default is 5000ms.
         :param resolution: [int] Delay in ms between instances of high frequency logs like mousemoves, scrolls, etc. Default is 100ms (10Hz).
         :param shutoff: [list] Turn off logging for specific events
     
@@ -72,6 +75,7 @@ class Ale (QObject):
         self.toolname = toolname
         self.toolversion = toolversion
         self.keylog = keylog
+        self.interval = interval
         self.resolution = resolution
         self.shutoff = shutoff
 
@@ -107,10 +111,29 @@ class Ale (QObject):
 
         # Sample rate 
         self.hfreq = [QEvent.MouseMove, QEvent.DragMove, QEvent.Scroll]
+        self.watcher = False
+
+        # Sample Timer
+        # self.timer = QTimer ()
+        # self.timer.timeout.connect (self.sample)
+        # self.timer.start(self.resolution)
+
+        # Cleanup Timer
+        
+        # self.timer2 = QTimer ()
+        # self.timer2.timeout.connect (self.sample2)
+        # self.timer2.start (0)
+
+        # connect (self, SIGNAL(aboutToQuit ()), self, SLOT(self.sample2()));
+
+        # connect(quitButton, SIGNAL(clicked()), &app, SLOT(quit()));
+
+        # Batch transmission of logs
+        self.intervalID = self.startTimer (self.interval)
+
+        # Temporary storage for logs
         self.logs = []
-        self.last = None
-        self.timer = None
-        self.flag = False
+        self.hlogs = []
 
     def eventFilter (self, object, event):
         '''
@@ -121,16 +144,13 @@ class Ale (QObject):
         Filters events for the watched widget (in this case, QApplication)
         '''
 
-        if self.flag == False:
-            self.flag = True
-            self.timer = datetime.datetime.now ()
-
         data = None
         t = event.type ()
 
         if t in self.map:        
             # Handle leaf node 
-            if object.isWidgetType () and len(object.children ()) == 0:
+            if len(object.children ()) == 0:
+            # if object.isWidgetType () and len(object.children ()) == 0:
                 name = list (self.map [t].keys())[0]
                 method = list (self.map [t].values())[0]
                 data = method (name, event, object)
@@ -141,20 +161,18 @@ class Ale (QObject):
                 # Either an event actually ocurred on window or is an effect of event propagation. 
                 pass
 
-        # Sample data
-        self.logs.append (data)
-
-        # Check time elapsed
-        elapsed = datetime.datetime.now () - self.timer
-        if elapsed.seconds == 1:
-            # print ("count = %d", len (self.logs)) 
-            self.flag = False
-            self.logs = []
-
         if data is not None:
-            self.logger.info (_(data))
+            self.logs.append (data)
 
         return super(Ale, self).eventFilter (object, event)
+
+    def timerEvent (self, event):
+        '''
+        :param object: [list] List of events
+        :return: [void] Emit events to file
+        '''
+        self.logger.info (_(self.logs))
+        self.logs = [] # Reset logs
 
     def getSender (self, object):
         '''
