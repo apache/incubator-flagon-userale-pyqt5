@@ -20,7 +20,7 @@ from collections import Counter
 import datetime, time
 import logging
 import uuid
-import json
+import atexit
 
 _ = JsonFormatter
 
@@ -122,13 +122,16 @@ class Ale (QObject):
         # self.timer2 = QTimer ()
         # self.timer2.timeout.connect (self.sample2)
         # self.timer2.start (0)
-
+        #self.destroyed.connect (Ale._on_destroyed)
         # Batch transmission of logs
         self.intervalID = self.startTimer (self.interval)
 
         # Temporary storage for logs
         self.logs = []
         self.hlogs = []
+
+        # Register Exit hanldler
+        atexit.register (self.cleanup)
 
     def eventFilter (self, object, event):
         '''
@@ -166,6 +169,13 @@ class Ale (QObject):
 
         return super (Ale, self).eventFilter (object, event)
 
+    def cleanup (self):
+        '''
+        Clean up any dangling logs in self.logs or self.hlogs
+        '''
+        self.aggregate ()
+        self.dump ()
+
     def timerEvent (self, event):
         '''
         :param object: [list] List of events
@@ -173,8 +183,11 @@ class Ale (QObject):
 
         Routinely dump data to file or send over the network
         '''
+        self.dump ()
+
+    def dump (self):
         if len(self.logs) > 0:
-            #print ("dumping {} logs".format (len (self.logs)))
+            # print ("dumping {} logs".format (len (self.logs)))
             self.logger.info (_(self.logs))
             self.logs = [] # Reset logs
 
@@ -184,7 +197,7 @@ class Ale (QObject):
         to be emitted later
         '''
         if len (self.hlogs) > 0:
-            #print ("agging {} logs".format (len (self.hlogs)))
+            # print ("agging {} logs".format (len (self.hlogs)))
             agg_events = Counter (self.hlogs)
             # Iterate over collapsed collection to generate a single log per event
             # Location information is lost due to consolidation. 
