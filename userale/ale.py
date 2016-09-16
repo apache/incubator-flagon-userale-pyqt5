@@ -16,6 +16,7 @@
 from userale.version import __version__
 from userale.format import JsonFormatter
 from PyQt5.QtCore import QObject, QEvent, QTimer
+from collections import Counter
 import datetime, time
 import logging
 import uuid
@@ -33,7 +34,7 @@ class Ale (QObject):
                  toolversion=None,
                  keylog=False,
                  interval=5000,
-                 resolution=1000,   
+                 resolution=100,   
                  shutoff=[]):
         """
         :param output: [str] The file or url path to which logs will be sent
@@ -111,22 +112,16 @@ class Ale (QObject):
 
         # Sample rate 
         self.hfreq = [QEvent.MouseMove, QEvent.DragMove, QEvent.Scroll]
-        self.watcher = False
 
         # Sample Timer
-        # self.timer = QTimer ()
-        # self.timer.timeout.connect (self.sample)
-        # self.timer.start(self.resolution)
+        self.timer = QTimer ()
+        self.timer.timeout.connect (self.aggregate)
+        self.timer.start (self.resolution)
 
         # Cleanup Timer
-        
         # self.timer2 = QTimer ()
         # self.timer2.timeout.connect (self.sample2)
         # self.timer2.start (0)
-
-        # connect (self, SIGNAL(aboutToQuit ()), self, SLOT(self.sample2()));
-
-        # connect(quitButton, SIGNAL(clicked()), &app, SLOT(quit()));
 
         # Batch transmission of logs
         self.intervalID = self.startTimer (self.interval)
@@ -161,23 +156,50 @@ class Ale (QObject):
                 # Either an event actually ocurred on window or is an effect of event propagation. 
                 pass
 
+        # Filter data to higher or lower priority list
         if data is not None:
-            self.logs.append (data)
+            if t in self.hfreq and t in self.map:   # data is in watched list and is a high frequency log
+                temp = (name, event, object)
+                self.hlogs.append (temp)
+            else:
+                self.logs.append (data)
 
-        return super(Ale, self).eventFilter (object, event)
+        return super (Ale, self).eventFilter (object, event)
 
     def timerEvent (self, event):
         '''
         :param object: [list] List of events
         :return: [void] Emit events to file
-        '''
-        self.logger.info (_(self.logs))
-        self.logs = [] # Reset logs
 
+        Routinely dump data to file or send over the network
+        '''
+        if len(self.logs) > 0:
+            #print ("dumping {} logs".format (len (self.logs)))
+            self.logger.info (_(self.logs))
+            self.logs = [] # Reset logs
+
+    def aggregate (self):
+        '''
+        Sample high frequency logs at self.resolution. High frequency logs are consolidated down to a single log event 
+        to be emitted later
+        '''
+        if len (self.hlogs) > 0:
+            #print ("agging {} logs".format (len (self.hlogs)))
+            agg_events = Counter (self.hlogs)
+            # Iterate over collapsed collection to generate a single log per event
+            # Location information is lost due to consolidation. 
+            # @todo develop hashing funciton or new counter to generate avg x and avg y location
+            for event, counter in agg_events.items ():
+                aggdata = self.__create_msg (event[0], event[1], event[2], details={"count" : counter})  
+                self.logs.append (aggdata)
+            self.hlogs = []
+        
     def getSender (self, object):
         '''
         :param object: [QObject] The object being watched.
         :return: [QObject] The QObject 
+
+        Fetch the QObject who triggered the event
         '''
 
         sender = None
@@ -322,7 +344,7 @@ class Ale (QObject):
         """
 
         data = {
-            "target": self.getSelector (object) ,
+            "target": self.getSelector (object),
             "path": self.getPath (object),
             "clientTime": self.getClientTime (),    
             "location": self.getLocation (event),
