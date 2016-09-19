@@ -25,6 +25,9 @@ import atexit
 _ = JsonFormatter
 
 class Ale (QObject):
+    """
+    ALE Library
+    """
 
     def __init__(self, 
                  output="userale.log",
@@ -139,7 +142,7 @@ class Ale (QObject):
         :param event: [QEvent] The event triggered by a user action.
         :return: [bool] Propagate filter up if other objects needs to be handled
         
-        Filters events for the watched widget (in this case, QApplication)
+        Filters events for the watched widget.
         '''
 
         data = None
@@ -173,6 +176,7 @@ class Ale (QObject):
         '''
         Clean up any dangling logs in self.logs or self.hlogs
         '''
+
         self.aggregate ()
         self.dump ()
 
@@ -183,9 +187,14 @@ class Ale (QObject):
 
         Routinely dump data to file or send over the network
         '''
+
         self.dump ()
 
     def dump (self):
+        '''
+        Write log data to file
+        '''
+
         if len(self.logs) > 0:
             # print ("dumping {} logs".format (len (self.logs)))
             self.logger.info (_(self.logs))
@@ -196,6 +205,7 @@ class Ale (QObject):
         Sample high frequency logs at self.resolution. High frequency logs are consolidated down to a single log event 
         to be emitted later
         '''
+        
         if len (self.hlogs) > 0:
             # print ("agging {} logs".format (len (self.hlogs)))
             agg_events = Counter (self.hlogs)

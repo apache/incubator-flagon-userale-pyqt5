@@ -71,7 +71,6 @@ clean:
 	rm -rf $(BUILDDIR)/html/*.js
 	rm -rf $(BUILDDIR)/html/*.html
 	rm -rf $(BUILDDIR)/html/_sources
-	rm -rf $(BUILDDIR)/html/_static
 
 .PHONY: html
 html:

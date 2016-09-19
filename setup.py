@@ -47,13 +47,13 @@ def get_version ():
     raise RuntimeError ('No version info found.')
 
 setup (
-    name = 'UserAle',
+    name = 'Apache UserALE.PyQt5',
     version = get_version (),
     url = 'https://github.com/draperlaboratory/userale.pyqt5',
-    license = 'Apache Software License',
+    license = 'Apache Software License 2.0',
     author = 'Michelle Beard',
     author_email = 'mbeard@draper.com',
-    description = 'UserAle provides an easy way to generate highly detailed log streams from a PyQt5 application.',
+    description = 'Apache UserALE.PyQt5 provides an easy way to generate highly detailed log streams from a PyQt5 application.',
     long_description = __doc__,
     classifiers = [
       'Development Status :: 4 - Beta',
@@ -63,8 +63,7 @@ setup (
       'Environment :: Desktop Environment',
       'Intended Audience :: Developers',
       'License :: OSI Approved :: Apache Software License',
-      'Operating System :: OS Independent', 
-      'Private :: Do Not Upload"'
+      'Operating System :: OS Independent'
     ],
     keywords = 'logs users interactions', # Separate with spaces
     packages = find_packages (exclude=['examples', 'tests']),
