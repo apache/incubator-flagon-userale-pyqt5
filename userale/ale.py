@@ -21,6 +21,7 @@ import datetime, time
 import logging
 import uuid
 import atexit
+import random
 
 _ = JsonFormatter
 
@@ -40,15 +41,15 @@ class Ale (QObject):
                  resolution=100,   
                  shutoff=[]):
         """
-        :param output: [str] The file or url path to which logs will be sent
-        :param user: [str] Identifier for the user of the application
-        :param session: [str] Session tag to track same user with multiple sessions. If a session is not provided, one will be created
-        :param toolname: [str] The application name
-        :param toolversion: [str] The application version
-        :param keylog: [bool] Should detailed key logs be recorded. Default is False
+        :param output: [str] The file or url path to which logs will be sent.
+        :param user: [str] Identifier for the user of the application.
+        :param session: [str] Session tag to track same user with multiple sessions. If a session is not provided, one will be created.
+        :param toolname: [str] The application name.
+        :param toolversion: [str] The application version.
+        :param keylog: [bool] Should detailed key logs be recorded. Default is False.
         :param interval: [int] The minimum time interval in ms between batch transmission of logs. Default is 5000ms.
-        :param resolution: [int] Delay in ms between instances of high frequency logs like mousemoves, scrolls, etc. Default is 100ms (10Hz).
-        :param shutoff: [list] Turn off logging for specific events
+        :param resolution: [int] Delay in ms between instances of high frequency logs like mousemoves, scrolls, etc. Default is 100ms (10Hz). Entering 0 disables it.
+        :param shutoff: [list] Turn off logging for specific events.
     
         An example log will appear like this:
 
@@ -117,15 +118,11 @@ class Ale (QObject):
         self.hfreq = [QEvent.MouseMove, QEvent.DragMove, QEvent.Scroll]
 
         # Sample Timer
-        self.timer = QTimer ()
-        self.timer.timeout.connect (self.aggregate)
-        self.timer.start (self.resolution)
+        if self.resolution > 0:
+            self.timer = QTimer ()
+            self.timer.timeout.connect (self.aggregate)
+            self.timer.start (self.resolution)
 
-        # Cleanup Timer
-        # self.timer2 = QTimer ()
-        # self.timer2.timeout.connect (self.sample2)
-        # self.timer2.start (0)
-        #self.destroyed.connect (Ale._on_destroyed)
         # Batch transmission of logs
         self.intervalID = self.startTimer (self.interval)
 
@@ -164,9 +161,8 @@ class Ale (QObject):
 
         # Filter data to higher or lower priority list
         if data is not None:
-            if t in self.hfreq and t in self.map:   # data is in watched list and is a high frequency log
-                temp = (name, event, object)
-                self.hlogs.append (temp)
+            if self.resolution > 0 and t in self.hfreq and t in self.map:   # data is in watched list and is a high frequency log
+                self.hlogs.append (data)
             else:
                 self.logs.append (data)
 
@@ -176,8 +172,8 @@ class Ale (QObject):
         '''
         Clean up any dangling logs in self.logs or self.hlogs
         '''
-
-        self.aggregate ()
+        if self.resolution > 0:
+            self.aggregate ()
         self.dump ()
 
     def timerEvent (self, event):
@@ -195,7 +191,7 @@ class Ale (QObject):
         Write log data to file
         '''
 
-        if len(self.logs) > 0:
+        if len (self.logs) > 0:
             # print ("dumping {} logs".format (len (self.logs)))
             self.logger.info (_(self.logs))
             self.logs = [] # Reset logs
@@ -208,13 +204,17 @@ class Ale (QObject):
         
         if len (self.hlogs) > 0:
             # print ("agging {} logs".format (len (self.hlogs)))
-            agg_events = Counter (self.hlogs)
-            # Iterate over collapsed collection to generate a single log per event
-            # Location information is lost due to consolidation. 
-            # @todo develop hashing funciton or new counter to generate avg x and avg y location
-            for event, counter in agg_events.items ():
-                aggdata = self.__create_msg (event[0], event[1], event[2], details={"count" : counter})  
-                self.logs.append (aggdata)
+            # Given target, path, location [median], return aggregate
+            # agg_events = Counter (self.hlogs)
+            # # Iterate over collapsed collection to generate a single log per event
+            # # Location information is lost due to consolidation. 
+            # # @todo develop hashing funciton or new counter to generate avg x and avg y location
+            # for event, counter in agg_events.items ():
+            #     # aggdata = self.__create_msg (event[0], event[1], event[2], details={"count" : counter}) 
+            #     aggdata = {"target": event[0], "type" : event[1], "details": {"count": counter}}
+            #     print (aggdata)
+            #     self.logs.append (aggdata)
+            self.logs.append (random.choice (self.hlogs))
             self.hlogs = []
         
     def getSender (self, object):
@@ -237,10 +237,12 @@ class Ale (QObject):
         :param object: [QObject] The base class for all Qt objects.
         :return: [str] The Qt object's name
 
-        Get target object's name (object defined by user or object's meta class name).
+        Get target object's name (object defined by user or object's meta class name). If object is null, return "Undefined".
         """
-        
-        return object.objectName () if object.objectName () else object.staticMetaObject.className ()
+        try:
+            return object.objectName () if object.objectName () else object.staticMetaObject.className ()
+        except:
+            return "Undefined"
 
     def getLocation (self, event):
         """
@@ -263,11 +265,14 @@ class Ale (QObject):
         Generate the entire object hierachy from root to leaf node. 
         """
 
-        if object.parent() is not None:
-            return self.getPath (object.parent()) + [self.getSelector (object)]
-        else:
-            return [self.getSelector (object)]
-
+        try:
+            if object.parent() is not None:
+                return self.getPath (object.parent()) + [self.getSelector (object)]
+            else:
+                return [self.getSelector (object)]
+        except:
+            return "Undefined"
+        
     def getClientTime (self):
         """
         :return: [str] String representation of the time the event was captured.
