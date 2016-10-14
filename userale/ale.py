@@ -85,10 +85,11 @@ class Ale (QObject):
         self.shutoff = shutoff
 
         # Configure logging
-        self.logger = logging
-        self.logger.basicConfig(level=logging.INFO,
-                                filename=self.output,
-                                format='%(message)s')
+        self.logger = logging.getLogger ('userale')
+        self.logger.propagate = False
+        self.logger.setLevel (logging.INFO)
+        handler = logging.FileHandler (self.output)
+        self.logger.addHandler (handler)
 
         # Mapping of all events to methods
         self.map = {
@@ -161,10 +162,12 @@ class Ale (QObject):
 
         # Filter data to higher or lower priority list
         if data is not None:
+            print (_(data))
             if self.resolution > 0 and t in self.hfreq and t in self.map:   # data is in watched list and is a high frequency log
                 self.hlogs.append (data)
             else:
                 self.logs.append (data)
+
 
         return super (Ale, self).eventFilter (object, event)
 
