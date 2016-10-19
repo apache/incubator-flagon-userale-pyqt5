@@ -14,67 +14,59 @@
 # limitations under the License.
 
 from setuptools import setup, find_packages
-from setuptools.command.test import test as TestCommand
-import io, os, sys
+import os
+import sys
+
 
 if sys.version_info[:2] < (3, 5):
     m = "Python 3.5 or later is required for UserAle (%d.%d detected)."
-    raise ImportError (m % sys.version_info[:2])
+    raise ImportError(m % sys.version_info[:2])
 
 if sys.argv[-1] == 'setup.py':
     print ("To install, run 'python3 setup.py install'")
     print ()
-    
-# This is a plug-in for setuptools that will invoke py.test
-# when you run python setup.py test
-class PyTest (TestCommand):
-    def finalize_options (self):
-        TestCommand.finalize_options (self)
-        self.test_args = []
-        self.test_suite = True
 
-    def run_tests (self):
-        import pytest  # import here, because outside the required eggs aren't loaded yet
-        sys.exit (pytest.main (self.test_args))
 
 # Get the version string
-def get_version ():
-    basedir = os.path.dirname (__file__)
-    with open (os.path.join (basedir, 'userale/version.py')) as f:
+def get_version():
+    basedir = os.path.dirname(__file__)
+    with open(os.path.join(basedir, 'userale/version.py')) as f:
         version = {}
-        exec (f.read (), version)
+        exec(f.read(), version)
         return version['__version__']
-    raise RuntimeError ('No version info found.')
+    raise RuntimeError('No version info found.')
 
-setup (
-    name = 'Apache UserALE.PyQt5',
-    version = get_version (),
-    url = 'https://github.com/draperlaboratory/userale.pyqt5',
-    license = 'Apache Software License 2.0',
-    author = 'Michelle Beard',
-    author_email = 'mbeard@draper.com',
-    description = 'Apache UserALE.PyQt5 provides an easy way to generate highly detailed log streams from a PyQt5 application.',
-    long_description = __doc__,
-    classifiers = [
-      'Development Status :: 4 - Beta',
-      'Programming Language :: Python',
-      'Programming Language :: Python :: 3.5',
-      'Natural Language :: English',
-      'Environment :: Desktop Environment',
-      'Intended Audience :: Developers',
-      'License :: OSI Approved :: Apache Software License',
-      'Operating System :: OS Independent'
+
+setup(
+    name='Apache UserALE.PyQt5',
+    version=get_version(),
+    url='https://github.com/apache/incubator-senssoft-userale-pyqt5',
+    license='Apache Software License 2.0',
+    author='Michelle Beard',
+    author_email='msbeard@apache.org',
+    description='Apache UserALE.PyQt5 provides an easy way to generate highly\
+     detailed log streams from a PyQt5 application.',
+    long_description=__doc__,
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: Apache Software License',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 3 :: Only',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Desktop Environment',
+        'Topic :: Scientific/Engineering :: Information Analysis'
     ],
-    keywords = 'logs users interactions', # Separate with spaces
-    packages = find_packages (exclude=['examples', 'tests']),
-    include_package_data = True,
-    zip_safe = False,
-    tests_require = ['pytest'],
-    cmdclass = {'test': PyTest},
-    install_requires = ['pyqt5==5.6', 
-                        'requests>=2.0.0'
-                        ],
-    entry_points = {
+    keywords='logs users interactions',
+    packages=find_packages(exclude=['examples', 'tests']),
+    include_package_data=True,
+    zip_safe=False,
+    tests_require=['pytest>=3.0.0', 'pytest-pylint', 'coverage'],
+    install_requires=['pyqt5==5.6', 'requests>=2.0.0'],
+    entry_points={
         'console_scripts': [
             'mouse = userale.examples.testapp:test_app',
             'drag = userale.examples.testdragndrop:test_drag',

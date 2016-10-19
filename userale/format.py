@@ -13,20 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import requests
-from requests.auth import HTTPBasicAuth, HTTPDigestAuth
-from requests.auth import AuthBase
-
 import json
 
-# Logger will need to optinally handle authorization 
-# through basic http auth, proxy, and SOCKS
 
 class JsonFormatter (object):
-	"""
-	"""
-	def __init__(self, data):
-		self.data = data
+    def __init__(self, data):
+        self.data = data
 
-	def __str__(self):
-		return "%s" % (json.dumps (self.data, sort_keys=False))
+    def __str__(self):
+        return "%s" % (json.dumps(self.data, sort_keys=False))
