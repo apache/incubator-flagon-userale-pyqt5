@@ -22,8 +22,6 @@ WORKDIR /code
 
 ADD requirements.txt /code
 ADD test_requirements.txt /code
-ADD docker/test/run_tests.sh /code/run_tests.sh
-RUN chmod +x /code/run_tests.sh
 
 # Install requirements
 RUN pip3 install -r requirements.txt
