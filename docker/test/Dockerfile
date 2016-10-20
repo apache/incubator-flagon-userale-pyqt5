@@ -13,21 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Ubuntu Xenial 16.04 [LTS]
-FROM ubuntu:16.04
+# Python 3.5 Base Image
+FROM python:3.5
+MAINTAINER Michelle Beard <msbeard@apache.org>
 
-# Install Deps
-RUN apt-get update -yqq && \
-    apt-get install -yqq python3-dev python3-pip qt5-default && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-    
-COPY requirements.txt /opt/userale
+RUN mkdir /code
+WORKDIR /code
 
-WORKDIR /opt
+ADD requirements.txt /code
+ADD test_requirements.txt /code
+ADD docker/test/run_tests.sh /code/run_tests.sh
+RUN chmod +x /code/run_tests.sh
 
 # Install requirements
 RUN pip3 install -r requirements.txt
+RUN pip3 install -r test_requirements.txt
 
-#CMD ["python", "./setup.py", "develop"]
+ADD . /code/
 
+RUN python3 setup.py test || exit 0
+RUN pylint userale/ --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" > /code/pylint.log || exit 0

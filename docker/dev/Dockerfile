@@ -13,5 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-requests>=2.0.0
-PyQt5==5.7
+# Python 3.5 Base Image
+FROM python:3.5
+MAINTAINER Michelle Beard <msbeard@apache.org>
+
+RUN mkdir /code
+WORKDIR /code
+
+ADD requirements.txt /code
+
+# Install requirements
+RUN pip3 install -r requirements.txt
+
+ADD . /code/
+
+RUN python3 setup.py develop || exit 0

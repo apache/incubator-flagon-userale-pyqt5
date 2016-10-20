@@ -65,7 +65,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     tests_require=['pytest>=3.0.0', 'pytest-pylint', 'coverage'],
-    install_requires=['pyqt5==5.6', 'requests>=2.0.0'],
+    install_requires=['pyqt5==5.7', 'requests>=2.0.0'],
     entry_points={
         'console_scripts': [
             'mouse = userale.examples.testapp:test_app',

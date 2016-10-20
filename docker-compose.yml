@@ -13,5 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-requests>=2.0.0
-PyQt5==5.7
+# Apache UserALE.PyQt5 Docker build
+
+version: "2"
+services:
+  dev:
+    build: 
+      context: .
+      dockerfile: ./docker/dev/Dockerfile
+    container_name: dev
+  test:
+    build: 
+      context: .
+      dockerfile: ./docker/test/Dockerfile
+    container_name: test
