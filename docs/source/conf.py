@@ -72,7 +72,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Apache UserALE.PyQt5'
-copyright = u'2016, Apache Software License'
+copyright = u'Copyright 2016 The Charles Stark Draper Laboratory, Inc. All rights reserved.'
 author = u'Michelle Beard <msbeard@apache.dot.org>'
 
 # The version info for the project you're documenting, acts as replacement for
