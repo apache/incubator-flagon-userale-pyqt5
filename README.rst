@@ -16,8 +16,8 @@
 	limitations under the License. 
 	--->
 
-Apache UserALE.PyQt5
-==============
+Apache Flagon UserALE.PyQt5 (Incubating)
+========================================
 
 Disclaimer: Apache Flagon UserALE.PyQt5 is a deprecated product and is no longer maintained. It will be retired soon.
 
