@@ -16,8 +16,10 @@
 	limitations under the License. 
 	--->
 
-Apache UserALE
+Apache UserALE.PyQt5
 ==============
+
+Disclaimer: Apache Flagon UserALE.PyQt5 is a deprecated product and is no longer maintained. It will be retired soon.
 
 Apache UserALE.PyQt5 is one of the Software As A Sensor™ products. The goal of Software As A Sensor™ is to develop understanding 
 of your users through their interactions with your software product. You can then apply that understanding to improve your 
